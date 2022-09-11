@@ -10,12 +10,14 @@ namespace Codecool.LinqLeague.Model
     public static class LeagueStatistics
     {
         /// <summary>
-        ///     Gets all teams with highests points order, if points are equal next deciding parameter is sum of golas of the team.
+        ///     Gets all teams with highests points order, if points are equal next deciding parameter is sum of gols of the team.
         /// </summary>
         /// <param name="teams"></param>
         /// <returns></returns>
         public static IEnumerable<Team> GetAllTeamsSorted(this IEnumerable<Team> teams)
-            => throw new NotImplementedException();
+            => teams
+            .OrderByDescending(t => t.CurrentPoints)
+            .ThenByDescending(t => t.Players.Sum(p => p.Goals));
 
         /// <summary>
         ///     Gets all players from each team in one collection.
@@ -23,7 +25,8 @@ namespace Codecool.LinqLeague.Model
         /// <param name="teams"></param>
         /// <returns></returns>
         public static IEnumerable<Player> GetAllPlayers(this IEnumerable<Team> teams)
-            => throw new NotImplementedException();
+            => teams
+            .SelectMany(t => t.Players);
 
         /// <summary>
         ///     Gets team with the longest name
@@ -31,7 +34,9 @@ namespace Codecool.LinqLeague.Model
         /// <param name="teams"></param>
         /// <returns></returns>
         public static Team GetTeamWithTheLongestName(this IEnumerable<Team> teams)
-            => throw new NotImplementedException();
+            => teams
+            .OrderByDescending(t => t.Name.Length)
+            .FirstOrDefault();
 
         /// <summary>
         ///     Gets top teams with least number of lost matches.
