@@ -10,14 +10,14 @@ namespace Codecool.LinqLeague.Model
     public static class LeagueStatistics
     {
         /// <summary>
-        ///     Gets all teams with highests points order, if points are equal next deciding parameter is sum of gols of the team.
+        ///     Gets all teams with highests points order, if points are equal next deciding parameter is sum of golas of the team.
         /// </summary>
         /// <param name="teams"></param>
         /// <returns></returns>
         public static IEnumerable<Team> GetAllTeamsSorted(this IEnumerable<Team> teams)
             => teams
             .OrderByDescending(t => t.CurrentPoints)
-            .ThenByDescending(t => t.Players.Sum(p => p.Goals));
+            .ThenByDescending(x => x.Players.Sum(p => p.Goals));
 
         /// <summary>
         ///     Gets all players from each team in one collection.
@@ -46,7 +46,10 @@ namespace Codecool.LinqLeague.Model
         /// <param name="teamsNumber">The number of Teams to select.</param>
         /// <returns>Collection of selected Teams.</returns>
         public static IEnumerable<Team> GetTopTeamsWithLeastLoses(this IEnumerable<Team> teams, int teamsNumber)
-            => throw new NotImplementedException();
+            => teams
+            .OrderBy(x => x.Losts)
+            .ThenByDescending(y => y.CurrentPoints)
+            .Take(teamsNumber);
 
         /// <summary>
         ///     Gets a player with the biggest goals number from each team.
@@ -54,7 +57,12 @@ namespace Codecool.LinqLeague.Model
         /// <param name="teams"></param>
         /// <returns></returns>
         public static IEnumerable<Player> GetTopPlayersFromEachTeam(this IEnumerable<Team> teams)
-            => throw new NotImplementedException();
+            => teams
+            .Select(x => x.Players
+                .OrderByDescending(y => y.Goals)
+                .FirstOrDefault()
+            );
+
 
         /// <summary>
         ///     Returns the division with greatest amount of points.
