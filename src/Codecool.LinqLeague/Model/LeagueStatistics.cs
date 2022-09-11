@@ -15,7 +15,7 @@ namespace Codecool.LinqLeague.Model
         /// <param name="teams"></param>
         /// <returns></returns>
         public static IEnumerable<Team> GetAllTeamsSorted(this IEnumerable<Team> teams)
-            => throw new NotImplementedException();
+            => teams.OrderByDescending(t => t.CurrentPoints).ThenByDescending(t => t.Players.Sum(p => p.Goals));
 
         /// <summary>
         ///     Gets all players from each team in one collection.
@@ -23,8 +23,7 @@ namespace Codecool.LinqLeague.Model
         /// <param name="teams"></param>
         /// <returns></returns>
         public static IEnumerable<Player> GetAllPlayers(this IEnumerable<Team> teams)
-            => teams
-            .SelectMany(t => t.Players);
+            => teams.SelectMany(t => t.Players);
 
         /// <summary>
         ///     Gets team with the longest name
@@ -32,7 +31,7 @@ namespace Codecool.LinqLeague.Model
         /// <param name="teams"></param>
         /// <returns></returns>
         public static Team GetTeamWithTheLongestName(this IEnumerable<Team> teams)
-            => throw new NotImplementedException();
+            => teams.OrderByDescending(t => t.Name.Length).FirstOrDefault();
 
         /// <summary>
         ///     Gets top teams with least number of lost matches.
@@ -42,7 +41,7 @@ namespace Codecool.LinqLeague.Model
         /// <param name="teamsNumber">The number of Teams to select.</param>
         /// <returns>Collection of selected Teams.</returns>
         public static IEnumerable<Team> GetTopTeamsWithLeastLoses(this IEnumerable<Team> teams, int teamsNumber)
-            => throw new NotImplementedException();
+            => teams.OrderBy(x => x.Losts).ThenByDescending(t => t.CurrentPoints).Take(teamsNumber);
 
         /// <summary>
         ///     Gets a player with the biggest goals number from each team.
@@ -50,7 +49,7 @@ namespace Codecool.LinqLeague.Model
         /// <param name="teams"></param>
         /// <returns></returns>
         public static IEnumerable<Player> GetTopPlayersFromEachTeam(this IEnumerable<Team> teams)
-            => throw new NotImplementedException();
+            => teams.Select(x => x.Players.OrderByDescending(t => t.Goals).FirstOrDefault());
 
         /// <summary>
         ///     Returns the division with greatest amount of points.
